@@ -14,11 +14,10 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 function transform(arr) {
-  //
-  let copyArr = arr;
-  if (!Array.isArray(copyArr)) {
+  if (!Array.isArray(arr)) {
     throw new Error(`'arr' parameter must be an instance of the Array!`);
   }
+  const copyArr = [...arr];
   copyArr.forEach((item, index) => {
     if (item === undefined) {
       copyArr.splice(index, 1)
@@ -26,23 +25,23 @@ function transform(arr) {
     if (item === '--discard-next') {
       if (index === copyArr.length-1) {
         copyArr.splice(index,1)
-      } else copyArr.splice(index, index, index+1)
+      } else copyArr.splice(index, index+1, index+1)
     } else if (item === '--discard-prev') {
       if (index === 0) {
-        copyArr.splice(0,1)
+        copyArr.splice(index,1)
       } else {
-        copyArr.splice(index - 1, index - 1)
+        copyArr.splice(index - 1, 2)
       }
     } else if (item === '--double-next') {
 
       if (index === copyArr.length-1) {
         copyArr.splice(index,1)
-      } else {copyArr.splice(index, 0, copyArr[index+1])}
+      } else {copyArr.splice(index, 1, copyArr[index+1])}
 
     } else if (item === '--double-prev') {
       if (index === 0) {
         copyArr.splice(index,1)
-      } else copyArr.splice(index, 0, copyArr[index-1])
+      } else copyArr.splice(index, 1, copyArr[index-1])
     }
   })
   return copyArr
